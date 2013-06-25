@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dominion" default="all">
+  
+  
+  <property file="dominion.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="128m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.pyc/**"/>
+    <exclude name="**/.pyo/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/*.lib/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/*.rbc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.6" value="${jdk.home.1.6}/bin"/>
+  <path id="jdk.classpath.1.6">
+    <fileset dir="${jdk.home.1.6}">
+      <include name="lib/deploy.jar"/>
+      <include name="lib/dt.jar"/>
+      <include name="lib/javaws.jar"/>
+      <include name="lib/jce.jar"/>
+      <include name="lib/jconsole.jar"/>
+      <include name="lib/management-agent.jar"/>
+      <include name="lib/plugin.jar"/>
+      <include name="lib/sa-jdi.jar"/>
+      <include name="../Classes/charsets.jar"/>
+      <include name="../Classes/classes.jar"/>
+      <include name="../Classes/jsse.jar"/>
+      <include name="../Classes/ui.jar"/>
+      <include name="lib/ext/apple_provider.jar"/>
+      <include name="lib/ext/dnsns.jar"/>
+      <include name="lib/ext/localedata.jar"/>
+      <include name="lib/ext/sunjce_provider.jar"/>
+      <include name="lib/ext/sunpkcs11.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.6}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.6}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.6"/>
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm4-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module Dominion -->
+  
+  <dirname property="module.dominion.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.dominion" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.dominion" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.dominion" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.dominion" value="${compiler.args}"/>
+  
+  <property name="dominion.output.dir" value="${module.dominion.basedir}/out/production/Dominion"/>
+  <property name="dominion.testoutput.dir" value="${module.dominion.basedir}/out/test/Dominion"/>
+  
+  <path id="dominion.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="dominion.module.production.classpath">
+    <path refid="${module.jdk.classpath.dominion}"/>
+  </path>
+  
+  <path id="dominion.runtime.production.module.classpath">
+    <pathelement location="${dominion.output.dir}"/>
+  </path>
+  
+  <path id="dominion.module.classpath">
+    <path refid="${module.jdk.classpath.dominion}"/>
+    <pathelement location="${dominion.output.dir}"/>
+  </path>
+  
+  <path id="dominion.runtime.module.classpath">
+    <pathelement location="${dominion.testoutput.dir}"/>
+    <pathelement location="${dominion.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.dominion">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.dominion">
+    <patternset refid="excluded.from.module.dominion"/>
+  </patternset>
+  
+  <path id="dominion.module.sourcepath">
+    <dirset dir="${module.dominion.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.dominion" depends="compile.module.dominion.production,compile.module.dominion.tests" description="Compile module Dominion"/>
+  
+  <target name="compile.module.dominion.production" depends="register.custom.compilers" description="Compile module Dominion; production classes">
+    <mkdir dir="${dominion.output.dir}"/>
+    <javac2 destdir="${dominion.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.dominion}/javac">
+      <compilerarg line="${compiler.args.dominion}"/>
+      <bootclasspath refid="dominion.module.bootclasspath"/>
+      <classpath refid="dominion.module.production.classpath"/>
+      <src refid="dominion.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.dominion"/>
+    </javac2>
+    
+    <copy todir="${dominion.output.dir}">
+      <fileset dir="${module.dominion.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.dominion.tests" depends="register.custom.compilers,compile.module.dominion.production" description="compile module Dominion; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.dominion" description="cleanup module">
+    <delete dir="${dominion.output.dir}"/>
+    <delete dir="${dominion.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.dominion" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.dominion" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
